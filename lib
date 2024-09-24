@@ -1,0 +1,79 @@
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class LibraryManagementSystem extends Application {
+
+    private List<Book> books = new ArrayList<>();
+    private ListView<String> bookListView = new ListView<>();
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Library Management System");
+
+        
+        TextField titleInput = new TextField();
+        titleInput.setPromptText("Book Title");
+        TextField authorInput = new TextField();
+        authorInput.setPromptText("Author");
+        Button addButton = new Button("Add Book");
+        Button displayButton = new Button("Display Books");
+
+        
+        addButton.setOnAction(e -> addBook(titleInput.getText(), authorInput.getText()));
+        displayButton.setOnAction(e -> displayBooks());
+
+        
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(titleInput, authorInput, addButton, displayButton, bookListView);
+        
+        Scene scene = new Scene(layout, 400, 400);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void addBook(String title, String author) {
+        if (!title.isEmpty() && !author.isEmpty()) {
+            books.add(new Book(title, author));
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Book added!");
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Please enter both title and author.");
+            alert.showAndWait();
+        }
+    }
+
+    private void displayBooks() {
+        bookListView.getItems().clear();
+        for (Book book : books) {
+            bookListView.getItems().add(book.getTitle() + " by " + book.getAuthor());
+        }
+    }
+
+    private static class Book {
+        private String title;
+        private String author;
+
+        public Book(String title, String author) {
+            this.title = title;
+            this.author = author;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getAuthor() {
+            return author;
+        }
+    }
+}
